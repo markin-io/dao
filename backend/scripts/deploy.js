@@ -28,7 +28,23 @@ ex : Asssume you have a string and a number to pass
 */
 
 async function main() {
-  // Write your deployment files here
+  const CRYPTO_DEVS_NFT_CONTRACT_ADDRESS = "0x5843d514562F0ebccd00f9F284BC1720d9d14F1e";
+
+  const fakeNftMarketPlace = await hre.ethers.getContractFactory("FakeNFTMarketplace");
+  const deployedFakeNftMarketPlace = await fakeNftMarketPlace.deploy();
+  await deployedFakeNftMarketPlace.deployed();
+
+  console.log('Deployed fake nft marketplace to', deployedFakeNftMarketPlace.address);
+
+  const cryptoDevsDAO = await hre.ethers.getContractFactory("CryptoDevsDAO");
+  const deployedCryptoDevsDAO = await cryptoDevsDAO.deploy(
+    deployedFakeNftMarketPlace.address,
+    CRYPTO_DEVS_NFT_CONTRACT_ADDRESS,
+    { value: hre.ethers.utils.parseEther("1") }
+  );
+  await deployedCryptoDevsDAO.deployed();
+
+  console.log('Deployed DAO contract to', deployedCryptoDevsDAO.address);
 }
 
 // Async Sleep function
